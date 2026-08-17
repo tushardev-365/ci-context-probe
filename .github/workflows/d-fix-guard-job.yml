@@ -1,0 +1,25 @@
+name: D fix guard job
+on: [push, workflow_dispatch]
+jobs:
+  check-key:
+    runs-on: ubuntu-latest
+    outputs:
+      has-key: ${{ steps.check.outputs.has-key }}
+    steps:
+      - id: check
+        env:
+          LINGO_KEY: ${{ secrets.SOME_KEY }}
+        run: |
+          if [ -n "$LINGO_KEY" ]; then
+            echo "has-key=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-key=false" >> "$GITHUB_OUTPUT"
+          fi
+      - run: echo "guard job evaluated has-key=${{ steps.check.outputs.has-key }}"
+
+  real:
+    needs: check-key
+    if: needs.check-key.outputs.has-key == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "real job ran (should be SKIPPED, secret is unset)"
