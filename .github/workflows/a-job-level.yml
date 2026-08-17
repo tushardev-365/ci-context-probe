@@ -1,0 +1,8 @@
+name: A job level secrets if
+on: [push, workflow_dispatch]
+jobs:
+  probe:
+    if: ${{ secrets.SOME_KEY != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "job ran"

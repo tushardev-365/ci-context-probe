@@ -1,0 +1,14 @@
+name: C control env indirection
+on: [push, workflow_dispatch]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      HAS_KEY: ${{ secrets.SOME_KEY != '' }}
+    steps:
+      - run: echo "first step"
+      - name: conditional
+        if: env.HAS_KEY == 'true'
+        run: echo "second step ran"
+      - name: always
+        run: echo "control workflow parsed fine"

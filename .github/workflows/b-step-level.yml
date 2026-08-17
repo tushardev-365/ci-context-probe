@@ -1,0 +1,10 @@
+name: B step level secrets if
+on: [push, workflow_dispatch]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "first step"
+      - name: conditional
+        if: success() && secrets.SOME_KEY != ''
+        run: echo "second step"
